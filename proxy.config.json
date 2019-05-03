@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "http://reddit.com/r/",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

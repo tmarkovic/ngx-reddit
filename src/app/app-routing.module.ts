@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import {PostListComponent} from './post-list/post-list.component';
 
-const routes: Routes = [];
+const routes: Routes = [{path: 'r/:id', component: PostListComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

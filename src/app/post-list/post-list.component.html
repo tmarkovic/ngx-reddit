@@ -1,0 +1,15 @@
+<div class="postlist">
+  <div class="item" *ngFor="let post of posts | async">
+    <div class="header">
+      Posted by u/<a href="#">{{post.author}}</a>
+    </div>
+    <div class="content">
+        <h2 class="title">
+            {{ post.title }}
+          </h2>
+    </div>
+<div class="footer">
+  {{post.num_comments}} {{post.num_comments === 1 ? 'Comment' : 'Comments'}}
+</div>
+  </div>
+</div>
