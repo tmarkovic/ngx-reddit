@@ -1,0 +1,20 @@
+<div class="w-full sticky pin-t bg-white shadow">
+  <div class="container mx-auto py-2">
+    <div class="inline flex items-center border-b border-b-2 border-grey-light py-2">
+      <input
+      (keyup)="onKey($event)"
+        class="appearance-none bg-transparent border-none w-full text-grey-darker mr-3 py-1 px-2 leading-tight focus:outline-none"
+        type="text"
+        placeholder="r/sweden"
+        aria-label="subreddit"
+      />
+      <button
+      (click)="onSearch($event)"
+        class="flex-no-shrink bg-blue hover:bg-blue-dark border-blue hover:border-blue-dark text-sm border-4 text-white py-1 px-2 rounded"
+        type="button"
+      >
+        search
+      </button>
+    </div>
+  </div>
+</div>

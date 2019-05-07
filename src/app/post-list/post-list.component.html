@@ -1,15 +1,76 @@
-<div class="postlist">
-  <div class="item" *ngFor="let post of posts | async">
-    <div class="header">
-      Posted by u/<a href="#">{{post.author}}</a>
-    </div>
-    <div class="content">
-        <h2 class="title">
+<div class="postlist py-4">
+  <ul class="list-reset flex justify-end mb-4">
+    <li class="">
+      <a
+        (click)="setPostLimit(5, $event)"
+        class="inline-block border hover:underline rounded-tl rounded-bl py-1 px-3 text-blue"
+        href=""
+        >5</a
+      >
+    </li>
+    <li class="">
+      <a
+        (click)="setPostLimit(15, $event)"
+        class="inline-block border hover:underline text-blue py-1 px-3"
+        href=""
+        >15</a
+      >
+    </li>
+    <li class="">
+      <a
+        (click)="setPostLimit(25, $event)"
+        class="inline-block border-r hover:underline border-t border-b rounded-tr rounded-br text-blue py-1 px-3"
+        href="#"
+        >25</a
+      >
+    </li>
+  </ul>
+  <div *ngIf="!(posts$ | async).isLoading">
+    <div
+      class="item rounded-md h-48 shadow-md flex mb-4 post"
+      *ngFor="let post of (posts$ | async).posts"
+    >
+      <div
+        class="h-full bg-grey-light rounded-tl-md text-sm text-center font-bold py-4 rounded-bl-md w-10"
+      >
+        {{ post.score | formatNumber }}
+      </div>
+      <div class="flex flex-col p-4">
+        <div class="header text-sm text-grey-dark">
+          Posted by u/<a
+            class="text-grey-dark no-underline hover:underline"
+            href="#"
+            >{{ post.author }}</a
+          >
+          {{ post.createdDistance }} ago
+        </div>
+        <div class="content">
+          <h2 class="text-black font-bold text-xl mb-2">
             {{ post.title }}
           </h2>
+        </div>
+        <div class="footer mt-auto">
+          {{ post.num_comments }}
+          {{ post.num_comments === 1 ? "Comment" : "Comments" }}
+        </div>
+      </div>
     </div>
-<div class="footer">
-  {{post.num_comments}} {{post.num_comments === 1 ? 'Comment' : 'Comments'}}
-</div>
+
+    <div class="inline-flex w-full justify-end">
+      <button
+        class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l"
+      >
+        Prev
+      </button>
+      <button
+        class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r"
+      >
+        Next
+      </button>
+    </div>
   </div>
+  <div
+    *ngIf="(posts$ | async).isLoading"
+    class="sk-spinner sk-spinner-pulse"
+  ></div>
 </div>
