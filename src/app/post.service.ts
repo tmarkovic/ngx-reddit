@@ -10,7 +10,7 @@ import { Preview } from './models/preview';
   providedIn: "root"
 })
 export class PostService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getPosts({
     subreddit,
@@ -21,6 +21,7 @@ export class PostService {
     postLimit?: number;
     after?: string;
   }): Observable<Post[]> {
+    console.log(subreddit)
     return this.http
       .get<Post>(`/api/${subreddit}.json?limit=${postLimit}&count=${postLimit}`)
       .pipe(

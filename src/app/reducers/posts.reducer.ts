@@ -6,18 +6,26 @@ export interface State {
   postLimit: number;
   lastPostId: string;
   posts: Array<Post>,
-  isLoading: boolean
+  isLoading: boolean,
+  subreddit: string
 }
 
 export const initialState: State = {
   postLimit: 10,
   lastPostId: "",
   posts: new Array<Post>(),
-  isLoading: false
+  isLoading: false,
+  subreddit: ''
 };
 
 export function postsReducer(state = initialState, action: ActionsUnion) {
   switch (action.type) {
+    case ActionTypes.SetSubreddit: {
+      return {
+        ...state,
+        ...action.payload
+      };
+    }
     case ActionTypes.SetLimit: {
       return {
         ...state,

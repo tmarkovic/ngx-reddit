@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { EMPTY, of } from "rxjs";
+import { EMPTY, of, concat, merge } from "rxjs";
 import {
   map,
   mergeMap,
@@ -8,6 +8,7 @@ import {
   switchMap,
   withLatestFrom,
   filter,
+  tap,
 } from "rxjs/operators";
 
 import { PostService } from "./post.service";
@@ -17,12 +18,15 @@ import {
   SetLastPostId,
   SetPostLimit,
   FetchPosts,
-  SetPosts
+  SetPosts,
+  SetSubreddit
 } from "./actions/posts.actions";
 import { Store, select } from "@ngrx/store";
 import { RouterNavigationAction, ROUTER_REQUEST } from "@ngrx/router-store";
 
 import { Post } from "./models/post";
+import { State } from './reducers/posts.reducer';
+import { RouterState } from '@angular/router';
 
 @Injectable()
 export class PostEffects {
@@ -40,26 +44,45 @@ export class PostEffects {
   // );
   loadPosts = this.actions$.pipe(
     ofType<FetchPosts>(ActionTypes.FetchPosts),
-    switchMap(action =>
-      this.postService
-        .getPosts({ subreddit: action.payload.subreddit })
+    mergeMap(action =>
+      [
+        this.postService
+          .getPosts({ subreddit: action.payload.subreddit })
+          .pipe(map((posts: Post[]) => new SetPosts({ posts: posts }))),
+        new SetSubreddit({ subreddit: action.payload.subreddit })
+      ]
+    )
+  );
+
+  @Effect()
+  loadPostsWithLimit = this.actions$.pipe(
+    ofType<SetPostLimit>(ActionTypes.SetLimit),
+    withLatestFrom(this.store),
+    switchMap(([action, state]) => {
+      console.log(state)
+      return this.postService
+        .getPosts({ subreddit: state.posts.subreddit, postLimit: action.payload.limit })
         .pipe(map((posts: Post[]) => new SetPosts({ posts: posts })))
+    }
     )
   );
   @Effect()
   fetchPostsOnNavigate = this.actions$.pipe(
     ofType<RouterNavigationAction>(ROUTER_REQUEST),
-    filter(action => action.payload.event.url.length > 0),
     switchMap(action => {
-      return action.payload.event.url.length > 1 ? this.postService
-        .getPosts({ subreddit: action.payload.event.url })
-        .pipe(map((posts: Post[]) => new SetPosts({ posts: posts }))) : EMPTY
+      return action.payload.event.url.length > 1 ?
+        this.postService
+          .getPosts({ subreddit: action.payload.event.url.split('/')[1] })
+          .pipe(switchMap((posts: Post[]) => [
+            new SetPosts({ posts: posts }),
+            new SetSubreddit({ subreddit: action.payload.event.url.split('/')[1] })]))
+        : EMPTY
     })
   );
 
   constructor(
     private actions$: Actions,
     private postService: PostService,
-    private store: Store<{ postLimit: number; subreddit: string }>
+    private store: Store<{ posts: State, router: RouterState }>
   ) { }
 }
