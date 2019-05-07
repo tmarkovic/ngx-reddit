@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { EMPTY } from "rxjs";
+import { EMPTY, of } from "rxjs";
 import {
   map,
   mergeMap,
   catchError,
   switchMap,
-  withLatestFrom
+  withLatestFrom,
+  filter,
 } from "rxjs/operators";
+
 import { PostService } from "./post.service";
 import {
   ActionsUnion,
@@ -45,18 +47,19 @@ export class PostEffects {
     )
   );
   @Effect()
-  loadPostsNavigation = this.actions$.pipe(
+  fetchPostsOnNavigate = this.actions$.pipe(
     ofType<RouterNavigationAction>(ROUTER_REQUEST),
-    switchMap(action =>
-      this.postService
+    filter(action => action.payload.event.url.length > 0),
+    switchMap(action => {
+      return action.payload.event.url.length > 1 ? this.postService
         .getPosts({ subreddit: action.payload.event.url })
-        .pipe(map((posts: Post[]) => new SetPosts({ posts: posts })))
-    )
+        .pipe(map((posts: Post[]) => new SetPosts({ posts: posts }))) : EMPTY
+    })
   );
 
   constructor(
     private actions$: Actions,
     private postService: PostService,
     private store: Store<{ postLimit: number; subreddit: string }>
-  ) {}
+  ) { }
 }

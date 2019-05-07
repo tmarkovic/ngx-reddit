@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { State } from "../reducers/posts.reducer";
 import { FetchPosts } from '../actions/posts.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-search-bar",
@@ -10,13 +11,13 @@ import { FetchPosts } from '../actions/posts.actions';
 })
 export class SearchBarComponent implements OnInit {
   public subreddit: string = '';
-  constructor(private store: Store<State>) {}
+  constructor(private router: Router) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onSearch(e: any) {
     e.preventDefault();
-    this.subreddit.length && this.store.dispatch(new FetchPosts({ subreddit: this.subreddit}));
+    this.subreddit.length && this.router.navigate([this.subreddit]);
 
   }
 
