@@ -26,6 +26,6 @@ export class PostListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(new FetchPosts({ subreddit: "sweden" }));
+    // this.store.dispatch(new FetchPosts({ subreddit: "sweden" }));
   }
 }

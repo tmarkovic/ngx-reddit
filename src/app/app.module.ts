@@ -13,6 +13,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { PostEffects } from './post.effects';
+import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 
 @NgModule({
   declarations: [AppComponent, PostListComponent, FormatNumberPipe, SearchBarComponent],
@@ -21,9 +22,10 @@ import { PostEffects } from './post.effects';
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({ posts: postsReducer }),
+    StoreModule.forRoot({ posts: postsReducer, router: routerReducer }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([PostEffects])
+    EffectsModule.forRoot([PostEffects]),
+    StoreRouterConnectingModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

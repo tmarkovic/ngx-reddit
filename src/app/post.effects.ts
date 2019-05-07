@@ -18,6 +18,8 @@ import {
   SetPosts
 } from "./actions/posts.actions";
 import { Store, select } from "@ngrx/store";
+import { RouterNavigationAction, ROUTER_REQUEST } from "@ngrx/router-store";
+
 import { Post } from "./models/post";
 
 @Injectable()
@@ -39,6 +41,15 @@ export class PostEffects {
     switchMap(action =>
       this.postService
         .getPosts({ subreddit: action.payload.subreddit })
+        .pipe(map((posts: Post[]) => new SetPosts({ posts: posts })))
+    )
+  );
+  @Effect()
+  loadPostsNavigation = this.actions$.pipe(
+    ofType<RouterNavigationAction>(ROUTER_REQUEST),
+    switchMap(action =>
+      this.postService
+        .getPosts({ subreddit: action.payload.event.url })
         .pipe(map((posts: Post[]) => new SetPosts({ posts: posts })))
     )
   );
