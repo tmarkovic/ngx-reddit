@@ -26,7 +26,7 @@ export class SetLastPostId implements Action {
 
 export class SetPosts implements Action {
   readonly type = ActionTypes.SetPosts;
-  constructor(public payload: { posts: Array<Post> }) { }
+  constructor(public payload: { posts: Array<Post>, after?: string, before?: string }) { }
 }
 
 export class FetchPosts implements Action {

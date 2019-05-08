@@ -4,30 +4,44 @@ import { Post } from "./models/post";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { distanceInWordsToNow } from "date-fns";
-import { Preview } from './models/preview';
+import { Preview } from "./models/preview";
 
 @Injectable({
   providedIn: "root"
 })
 export class PostService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  mapParameters = (params): string => {
+    return Object.entries(params)
+      .map(([param, value], i) => {
+        if (value) {
+          return `${i === 0 ? "?" : "&"}${param}=${value}`;
+        }
+      })
+      .filter(x => !!x)
+      .join("");
+  };
 
   getPosts({
     subreddit,
-    postLimit = 5,
-    after = "t3_blad89"
+    limit = 15,
+    before,
+    after
   }: {
     subreddit: string;
-    postLimit?: number;
+    limit?: number;
+    before?: string;
     after?: string;
-  }): Observable<Post[]> {
-    console.log(subreddit)
+  }): Observable<{ after: string; before: string; posts: Post[] }> {
+    console.log(this.mapParameters({ limit, before, after }));
     return this.http
-      .get<Post>(`/api/${subreddit}.json?limit=${postLimit}&count=${postLimit}`)
+      .get<Post>(
+        `/api/${subreddit}.json${this.mapParameters({ limit, before, after })}`
+      )
       .pipe(
-        map((data: any) => {
-          console.log(data);
-          return data.data.children.map((child: any) => {
+        map((res: any) => {
+          let posts = res.data.children.map((child: any) => {
             const {
               thumbnail,
               created,
@@ -52,6 +66,8 @@ export class PostService {
               preview ? new Preview(preview.enabled, preview.images) : null
             );
           });
+
+          return { posts, after: res.data.after, before: res.data.before };
         })
       );
   }

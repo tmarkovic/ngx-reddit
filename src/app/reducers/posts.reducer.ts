@@ -5,9 +5,11 @@ import { Post } from '../models/post';
 export interface State {
   postLimit: number;
   lastPostId: string;
-  posts: Array<Post>,
-  isLoading: boolean,
-  subreddit: string
+  posts: Array<Post>;
+  isLoading: boolean;
+  subreddit: string;
+  after: string;
+  before: string;
 }
 
 export const initialState: State = {
@@ -15,7 +17,9 @@ export const initialState: State = {
   lastPostId: "",
   posts: new Array<Post>(),
   isLoading: false,
-  subreddit: ''
+  subreddit: '',
+  after: '',
+  before: ''
 };
 
 export function postsReducer(state = initialState, action: ActionsUnion) {

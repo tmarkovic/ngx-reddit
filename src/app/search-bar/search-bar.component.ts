@@ -1,7 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { State } from "../reducers/posts.reducer";
-import { FetchPosts } from '../actions/posts.actions';
 import { Router } from '@angular/router';
 
 @Component({
