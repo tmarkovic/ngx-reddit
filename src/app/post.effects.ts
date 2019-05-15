@@ -59,26 +59,25 @@ export class PostEffects {
   fetchPostsOnNavigate = this.actions$.pipe(
     ofType<RouterNavigationAction>(ROUTER_NAVIGATION),
     switchMap(action => {
-      console.log(action);
       let routerRoot = { ...action.payload.routerState.root };
       return action.payload.event.url.length > 1
         ? this.postService
-            .getPosts({
-              subreddit: routerRoot.firstChild.params.id,
-              ...routerRoot.queryParams
+          .getPosts({
+            subreddit: routerRoot.firstChild.params.id,
+            ...routerRoot.queryParams
+          })
+          .pipe(
+            switchMap(res => {
+              let actions = [
+                new SetPosts({ ...res }),
+                new SetSubreddit({
+                  subreddit: routerRoot.firstChild.params.id
+                }),
+                new SetPostLimit({ limit: routerRoot.queryParams.limit })
+              ];
+              return actions;
             })
-            .pipe(
-              switchMap(res => {
-                let actions = [
-                  new SetPosts({ ...res }),
-                  new SetSubreddit({
-                    subreddit: routerRoot.firstChild.params.id
-                  }),
-                  new SetPostLimit({ limit: routerRoot.queryParams.limit })
-                ];
-                return actions;
-              })
-            )
+          )
         : EMPTY;
     })
   );
@@ -87,5 +86,5 @@ export class PostEffects {
     private actions$: Actions,
     private postService: PostService,
     private store: Store<{ posts: State; router: RouterState }>
-  ) {}
+  ) { }
 }

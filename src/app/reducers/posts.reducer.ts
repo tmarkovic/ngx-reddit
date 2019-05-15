@@ -33,7 +33,7 @@ export function postsReducer(state = initialState, action: ActionsUnion) {
     case ActionTypes.SetLimit: {
       return {
         ...state,
-        ...action.payload
+        postLimit: action.payload.limit
       };
     }
     case ActionTypes.SetLastPostId: {

@@ -16,11 +16,15 @@ import { Router, Params } from "@angular/router";
 })
 export class PostListComponent implements OnInit {
   public posts$: Observable<State> = this.store.select("posts");
+  after: string;
+  before: string;
+  count: number;
+
   constructor(
     private postService: PostService,
     private store: Store<{ State }>,
     private router: Router
-  ) {}
+  ) { }
 
   setPostLimit(n: number, e: any) {
     e.preventDefault();
@@ -30,11 +34,30 @@ export class PostListComponent implements OnInit {
       }
     });
   }
-  next(last: Post, e: any) {
+  next(e: any) {
     e.preventDefault();
-    console.log(last)
+    this.router.navigate([], {
+      queryParams: {
+        after: this.after,
+        before: null,
+        count: this.count
+      },
+      queryParamsHandling: "merge"
+    });
+  }
+
+  prev(e: any) {
+    e.preventDefault();
+    this.router.navigate([], {
+      queryParams: {
+        before: this.before,
+        after: null,
+        count: this.count
+      },
+      queryParamsHandling: "merge"
+    });
   }
   ngOnInit() {
-    // this.store.dispatch(new FetchPosts({ subreddit: "sweden" }));
+    this.store.select("posts").subscribe(x => { this.after = x.after; this.before = x.before, this.count = x.count })
   }
 }

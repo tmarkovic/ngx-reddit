@@ -1,61 +1,49 @@
 <div class="postlist py-4">
   <ul class="list-reset flex justify-end mb-4">
     <li class="">
-      <a
-        (click)="setPostLimit(5, $event)"
-        class="inline-block border hover:underline bg-white rounded-tl rounded-bl py-1 px-3 text-blue"
-        href=""
-        >5</a
-      >
+      <a (click)="setPostLimit(5, $event)"
+        class="inline-block border hover:underline bg-white rounded-tl rounded-bl py-1 px-3 text-blue" href="">5</a>
     </li>
     <li class="">
-      <a
-        (click)="setPostLimit(15, $event)"
-        class="inline-block border hover:underline bg-white text-blue py-1 px-3"
-        href=""
-        >15</a
-      >
+      <a (click)="setPostLimit(15, $event)" class="inline-block border hover:underline bg-white text-blue py-1 px-3"
+        href="">15</a>
     </li>
     <li class="">
-      <a
-        (click)="setPostLimit(25, $event)"
+      <a (click)="setPostLimit(25, $event)"
         class="inline-block border-r hover:underline bg-white border-t border-b rounded-tr rounded-br text-blue py-1 px-3"
-        href="#"
-        >25</a
-      >
+        href="#">25</a>
     </li>
   </ul>
   <div *ngIf="!(posts$ | async).isLoading">
-    <div
-      class="item rounded-lg h-24 bg-white shadow-md flex mb-4 post"
-      *ngFor="
+    <div class="item rounded-lg bg-white shadow-md flex mb-4 post" *ngFor="
         let post of (posts$ | async).posts;
         let first = first;
         let last = last
-      "
-    >
-      <div
-        class="h-full rounded-tl-lg rounded-bl-lg bg-grey-light text-sm text-center font-bold py-4 w-10"
-      >
+      ">
+      <div class="h-auto rounded-tl-lg rounded-bl-lg bg-gray-200 text-sm text-center font-bold py-4 w-10">
 
         {{ post.score | formatNumber }}
       </div>
       <div class="flex flex-col p-4">
         <div class="header text-sm text-grey-dark">
-          Posted by u/<a
-            class="text-grey-dark no-underline hover:underline"
-            href="#"
-            >{{ post.author }}</a
-          >
+          Posted by u/<a class="text-grey-dark no-underline hover:underline" href="#">{{ post.author }}</a>
           {{ post.createdDistance }} ago
         </div>
         <div class="content">
-          <h2 class="text-black font-bold text-xl mb-2">
-            {{ post.title }}
-            {{last | json}}
-          </h2>
+          <div class="flex mb-2">
+            <img *ngIf="post.thumbnail !== 'self'" src="{{post.thumbnail}}" alt="thumbnail" class="mr-2">
+            <h2 class="text-black font-bold text-xl">
+              {{ post.title }}
+            </h2>
+          </div>
+          <p class="text-sm self-text">{{post.selfText}}</p>
+          <button (click)="onSearch($event)"
+            class="flex-no-shrink bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm"
+            type="button">
+            Read more
+          </button>
         </div>
-        <div class="footer mt-auto">
+        <div class="footer mt-auto text-sm">
           {{ post.num_comments }}
           {{ post.num_comments === 1 ? "Comment" : "Comments" }}
         </div>
@@ -63,22 +51,13 @@
     </div>
 
     <div class="inline-flex w-full justify-end">
-      <button
-        (click)="prev(first, $event)"
-        class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l"
-      >
+      <button (click)="prev($event)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
         Prev
       </button>
-      <button
-        (click)="next(last, $event)"
-        class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r"
-      >
+      <button (click)="next($event)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
         Next
       </button>
     </div>
   </div>
-  <div
-    *ngIf="(posts$ | async).isLoading"
-    class="sk-spinner sk-spinner-pulse"
-  ></div>
+  <div *ngIf="(posts$ | async).isLoading" class="sk-spinner sk-spinner-pulse"></div>
 </div>

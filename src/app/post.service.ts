@@ -10,7 +10,7 @@ import { Preview } from "./models/preview";
   providedIn: "root"
 })
 export class PostService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   mapParameters = (params): string => {
     return Object.entries(params)
@@ -27,20 +27,30 @@ export class PostService {
     subreddit,
     limit = 15,
     before,
-    after
+    after,
+    count
   }: {
     subreddit: string;
     limit?: number;
     before?: string;
     after?: string;
-  }): Observable<{ after: string; before: string; posts: Post[] }> {
-    console.log(this.mapParameters({ limit, before, after }));
+    count?: number;
+  }): Observable<{ count: number, after: string; before: string; posts: Post[] }> {
+
     return this.http
       .get<Post>(
-        `/api/${subreddit}.json${this.mapParameters({ limit, before, after })}`
+        `/api/${subreddit}.json${this.mapParameters({ limit, before, after, count })}`
       )
       .pipe(
         map((res: any) => {
+          res.data.children.forEach((child, i) => {
+            console.log(i + " " + child.data.name)
+          });
+          console.log("-----------")
+
+          console.log(`Before: ${before}`)
+
+          console.log("-----------")
           let posts = res.data.children.map((child: any) => {
             const {
               thumbnail,
@@ -67,7 +77,7 @@ export class PostService {
             );
           });
 
-          return { posts, after: res.data.after, before: res.data.before };
+          return { posts, count: res.data.dist, after: res.data.after, before: res.data.before };
         })
       );
   }

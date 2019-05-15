@@ -1,3 +1,4 @@
+import { decode } from 'he';
 /**
  * Format integer with suffix
  *
@@ -5,8 +6,8 @@
  * @param n positive integer
  * @returns formatted string
  */
-const formatNumberSuffix = (n: number) : string => {
-  if(n < 0) {
+const formatNumberSuffix = (n: number): string => {
+  if (n < 0) {
     throw new Error("number must be positive")
   }
   if (n < 1e3) {
@@ -20,5 +21,9 @@ const formatNumberSuffix = (n: number) : string => {
   }
 }
 
+const decodeHtmlEntities = (s: string): string => {
+  return decode(s);
+}
 
-export {formatNumberSuffix};
+
+export { formatNumberSuffix, decodeHtmlEntities };
