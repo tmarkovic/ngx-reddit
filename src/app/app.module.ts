@@ -15,9 +15,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { PostEffects } from './post.effects';
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 import { HtmlEntityDecoderPipe } from './html-entity-decoder.pipe';
+import { SinglePostComponent } from './single-post/single-post.component';
 
 @NgModule({
-  declarations: [AppComponent, PostListComponent, FormatNumberPipe, SearchBarComponent, HtmlEntityDecoderPipe],
+  declarations: [AppComponent, PostListComponent, FormatNumberPipe, SearchBarComponent, HtmlEntityDecoderPipe, SinglePostComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

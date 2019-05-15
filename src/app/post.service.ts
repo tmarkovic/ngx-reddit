@@ -5,12 +5,13 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { distanceInWordsToNow } from "date-fns";
 import { Preview } from "./models/preview";
+import { decode } from "he";
 
 @Injectable({
   providedIn: "root"
 })
 export class PostService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   mapParameters = (params): string => {
     return Object.entries(params)
@@ -35,22 +36,31 @@ export class PostService {
     before?: string;
     after?: string;
     count?: number;
-  }): Observable<{ count: number, after: string; before: string; posts: Post[] }> {
-
+  }): Observable<{
+    count: number;
+    after: string;
+    before: string;
+    posts: Post[];
+  }> {
     return this.http
       .get<Post>(
-        `/api/${subreddit}.json${this.mapParameters({ limit, before, after, count })}`
+        `/api/${subreddit}.json${this.mapParameters({
+          limit,
+          before,
+          after,
+          count
+        })}`
       )
       .pipe(
         map((res: any) => {
           res.data.children.forEach((child, i) => {
-            console.log(i + " " + child.data.name)
+            console.log(i + " " + child.data.name);
           });
-          console.log("-----------")
+          console.log("-----------");
 
-          console.log(`Before: ${before}`)
+          console.log(`Before: ${before}`);
 
-          console.log("-----------")
+          console.log("-----------");
           let posts = res.data.children.map((child: any) => {
             const {
               thumbnail,
@@ -61,9 +71,10 @@ export class PostService {
               permalink,
               title,
               preview,
-              selftext
+              selftext,
+              post_hint,
+              url
             } = child.data;
-
             return new Post(
               thumbnail,
               created,
@@ -73,11 +84,18 @@ export class PostService {
               permalink,
               title,
               selftext,
+              post_hint,
+              url,
               preview ? new Preview(preview.enabled, preview.images) : null
             );
           });
 
-          return { posts, count: res.data.dist, after: res.data.after, before: res.data.before };
+          return {
+            posts,
+            count: res.data.dist,
+            after: res.data.after,
+            before: res.data.before
+          };
         })
       );
   }

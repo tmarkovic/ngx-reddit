@@ -11,6 +11,8 @@ export class Post {
     public permalink: string,
     public title: string,
     public selfText: string,
+    public post_hint: string,
+    public url: string,
     public preview?: Preview,
   ) {}
 
