@@ -58,16 +58,9 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js"
-            },
-            "outputPath": "dist/ngx-reddit",
-            "main": "src/main.ts",
-
-            "tsConfig": "src/tsconfig.app.json"
-
+            "browserTarget": "ngx-reddit:build"
           },
           "configurations": {
             "production": {
