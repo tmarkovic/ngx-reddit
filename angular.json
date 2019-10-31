@@ -60,10 +60,9 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "ngx-reddit:build",
-            "proxyConfig": "proxy.config.json"
+            "browserTarget": "ngx-reddit:build"
           },
           "configurations": {
             "production": {
